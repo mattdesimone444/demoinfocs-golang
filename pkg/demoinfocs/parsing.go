@@ -212,7 +212,8 @@ func (p *Parser) parseFrame() bool {
 	p.msgQueue <- ingameTickNumber(p.bitReader.ReadSignedInt(32))
 
 	// Skip 'player slot'
-	p.bitReader.Skip(8)
+	const nSlotBits = 8
+	p.bitReader.Skip(nSlotBits)
 
 	debugDemoCommand(cmd)
 
@@ -295,7 +296,8 @@ func (p *Parser) parsePacket() {
 	// Booooring
 	// 152 bytes CommandInfo, 4 bytes SeqNrIn, 4 bytes SeqNrOut
 	// See at the bottom of the file what the CommandInfo would contain if you are interested.
-	p.bitReader.Skip((152 + 4 + 4) << 3)
+	const nCommandInfoBits = (152 + 4 + 4) << 3
+	p.bitReader.Skip(nCommandInfoBits)
 
 	// Here we go
 	p.bitReader.BeginChunk(p.bitReader.ReadSignedInt(32) << 3)
@@ -330,6 +332,7 @@ func (p *Parser) parsePacket() {
 
 				// On to the next one
 				p.bitReader.EndChunk()
+
 				continue
 			}
 		}
